@@ -170,11 +170,50 @@ function hello() {
                     return <input type={type} {...props} />;
                   },
                   // 自定义脚注样式
-                  sup: ({ children, ...props }) => (
-                    <sup className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300" {...props}>
-                      {children}
-                    </sup>
-                  ),
+                  sup: ({ children, ...props }) => {
+                    // 从子元素中查找脚注引用的 ID
+                    let footnoteRef = '';
+                    
+                    // 检查 sup 元素本身的 ID
+                    if (props.id) {
+                      footnoteRef = props.id.replace(/^user-content-fnref-/, '').replace(/-\d+$/, '');
+                    }
+                    
+                    // 如果 sup 没有 ID，检查子元素 a 标签的 ID
+                     if (!footnoteRef && React.isValidElement(children)) {
+                       const childProps = children.props as any;
+                       if (childProps && childProps.id) {
+                         footnoteRef = childProps.id.replace(/^user-content-fnref-/, '').replace(/-\d+$/, '');
+                       }
+                     }
+                    
+                    // 从 markdown 内容中提取对应的脚注定义（不使用正则）
+                    const getFootnoteContent = (ref: string) => {
+                      if (!ref) return '';
+                      const lines = markdown.split('\n');
+                      const footnotePrefix = `[^${ref}]:`;
+                      
+                      for (const line of lines) {
+                        const trimmedLine = line.trim();
+                        if (trimmedLine.startsWith(footnotePrefix)) {
+                          return trimmedLine.substring(footnotePrefix.length).trim();
+                        }
+                      }
+                      return '';
+                    };
+                    
+                    const footnoteContent = getFootnoteContent(footnoteRef);
+                    
+                    return (
+                      <sup 
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-help" 
+                        title={footnoteContent ? `文件: MarkdownEditor.tsx\n脚注内容: ${footnoteContent}` : `调试: ref=${footnoteRef}, id=${props.id}`}
+                        {...props}
+                      >
+                        {children}
+                      </sup>
+                    );
+                  },
                   section: ({ children, ...props }: any) => {
                     // 检查是否是脚注区域
                     if (props['data-footnotes']) {
