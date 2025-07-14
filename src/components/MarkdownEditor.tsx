@@ -5,6 +5,8 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeFootnoteHover from '../../rehype-footnote-hover';
 
+import rehypeFootnoteNumberPreserver from '../../rehype-footnote-number';
+
 const MarkdownEditor: React.FC = () => {
   const [markdown, setMarkdown] = useState(`# Markdown 编辑器
 
@@ -99,7 +101,7 @@ function hello() {
             <div className="prose prose-sm max-w-none dark:prose-invert">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeFootnoteHover]}
+                rehypePlugins={[rehypeFootnoteHover,rehypeFootnoteNumberPreserver]}
                 urlTransform={(url) => {
                   // 允许自定义协议 ushu-Wnr6PQO4://
                   if (url.startsWith('ushu-Wnr6PQO4://')) {
