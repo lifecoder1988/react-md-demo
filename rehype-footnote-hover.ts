@@ -11,8 +11,7 @@ const rehypeFootnoteHover: Plugin<[], Root> = () => {
     visit(tree, 'element', (node) => {
       if (
         node.tagName === 'section' &&
-        Array.isArray(node.properties?.className) &&
-        node.properties.className.includes('footnotes')
+        String(node.properties.className || "").includes('footnotes')
       ) {
         const list = node.children.find((child): child is Element => 
           child.type === 'element' && child.tagName === 'ol'
