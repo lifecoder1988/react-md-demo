@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeFootnoteHover from '../../rehype-footnote-hover';
-
 import rehypeFootnoteNumberPreserver from '../../rehype-footnote-number';
+import rehypeFootnoteSort from '../../rehype-footnote-sort';
 
 const MarkdownEditor: React.FC = () => {
   const [markdown, setMarkdown] = useState(`# Markdown 编辑器
@@ -53,10 +53,14 @@ function hello() {
 
 ### 脚注示例
 
-这是一个包含脚注的段落[^1]。你也可以使用命名脚注[^note]。
+这是一个包含脚注的段落[^1]。你也可以使用命名脚注[^note]。这里还有第三个脚注[^3]，第二个脚注[^2]，以及第五个脚注[^5]和第四个脚注[^4]。
 
+[^5]: 这是第五个脚注的内容，测试排序功能。
 [^1]: 这是第一个脚注的内容。
+[^3]: 这是第三个脚注的内容。
 [^note]: 这是一个命名脚注的内容。
+[^2]: 这是第二个脚注的内容。
+[^4]: 这是第四个脚注的内容。
 
 > 这是一个引用块，用于突出显示重要信息。
 `);
@@ -101,7 +105,7 @@ function hello() {
             <div className="prose prose-sm max-w-none dark:prose-invert">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeFootnoteHover,rehypeFootnoteNumberPreserver]}
+                rehypePlugins={[rehypeFootnoteHover, rehypeFootnoteNumberPreserver, rehypeFootnoteSort]}
                 urlTransform={(url) => {
                   // 允许自定义协议 ushu-Wnr6PQO4://
                   if (url.startsWith('ushu-Wnr6PQO4://')) {
